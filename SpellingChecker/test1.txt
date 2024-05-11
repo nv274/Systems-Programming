@@ -1,0 +1,6 @@
+apple
+banana
+pepper
+potato
+orange
+kumquat
