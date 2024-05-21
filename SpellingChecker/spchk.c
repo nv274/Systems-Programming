@@ -7,6 +7,7 @@
 #include <dirent.h>
 #include <ctype.h>
 
+
 long get_file_size(char *filename) {
 	struct stat file_status;
 	if(stat(filename, &file_status) < 0) {
@@ -15,6 +16,7 @@ long get_file_size(char *filename) {
 	return file_status.st_size;
 }
 
+//Uses binary search to check for word in compiled dictionary array
 int wordlookup(char* dict, long dict_size, char* word) {
 	char dict_entry[64];
 	char clean_word[64];
@@ -61,6 +63,7 @@ int wordlookup(char* dict, long dict_size, char* word) {
 	return 1;
 }
 
+//Uses POSIX functions to traverse filepaths
 char* traverse(char* filepath, int* size, int* pos) {
 	struct stat stats;
 	int pathlen = strlen(filepath+(64*(*pos)));
@@ -92,6 +95,7 @@ char* traverse(char* filepath, int* size, int* pos) {
 }
 
 int main(int argc, char* argv[]) {
+	//compiles dictionary
 	long dictionary_size = get_file_size(argv[1]);
 	if(dictionary_size == 0) {
 		perror("Error: Dictionary is empty.\n");
