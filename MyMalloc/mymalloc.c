@@ -7,16 +7,19 @@ static double memory[MEMLENGTH];
 struct block {
     int free;
     int size;
+//Address of next block is determined by size of current block + metadata
 };
 
 void initialize(struct block *target) {
     struct block p = {1, 4096 - sizeof(struct block)};
     *target = p;
+//Creates the first block
 }
 
 int align(int numBytes) {
     int alignedBytes = ((numBytes + 7) / 8) * 8; // Align to 8 bytes
     return alignedBytes;
+//8 byte wide alignment
 }
 
 void split(struct block *target, int reqBytes) {
@@ -24,6 +27,7 @@ void split(struct block *target, int reqBytes) {
     nextBlock->free = 1;
     nextBlock->size = target->size - reqBytes - sizeof(struct block);
     target->size = reqBytes;
+//When allocating a new block, will split a free block if it has enough space for the requested memory.
 }
 
 void* mymalloc(size_t numBytes, char* file, int line) {
@@ -38,6 +42,7 @@ void* mymalloc(size_t numBytes, char* file, int line) {
         initialize(curr);
         printf("Minimum chunk size: %ld bytes\n",(sizeof(struct block)+8));
     }
+//moves to address of possible next block
     struct block *prev = curr;
     curr = (struct block*) ((char*)curr + curr->size + sizeof(struct block));
     void* payload = NULL;
@@ -79,6 +84,7 @@ void myfree(void* address, char* file, int line) {
 	return;
     }
     struct block *target = (struct block*)memory;
+	//Iterates through blocks to see if the address requested to be freed has been returned by mymalloc.
     while ((void*)target <= address) {
         if ((void*)target + sizeof(struct block) == address) {
             if (!target->free) {
